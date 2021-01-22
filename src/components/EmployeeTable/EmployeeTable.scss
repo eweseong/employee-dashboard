@@ -1,0 +1,9 @@
+.order-icon {
+  margin-left: .5rem;
+  transition: transform .3s cubic-bezier(0, 0, 0.2, 1);
+  cursor: pointer;
+
+  &.inverse {
+    transform: rotate(180deg);
+  }
+}
