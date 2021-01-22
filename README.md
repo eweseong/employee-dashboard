@@ -2,6 +2,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+It is an employee dashboard that display the employees information and anlyses. A live demo can be found at https://eweseong.github.io/employee-dashboard/
+
 ## Available Scripts
 
 In the project directory, you can run:
