@@ -1,16 +1,20 @@
 import classnames from 'classnames';
-import { formatCurrency, formatDate } from 'helpers/employeeHelper';
+import { ORDER } from 'const';
+import {
+  formatCurrency,
+  formatDate,
+  sortEmployees,
+} from 'helpers/employeeHelper';
 import React, { useCallback, useState } from 'react';
 import './EmployeeTable.scss';
 
 interface EmployeeTableProps {
   employees: Employee[];
-  toggleDateJoinedOrder: () => void;
 }
 
 function ChevronDownIcon({ inverse }: { inverse: boolean }) {
   const className = classnames('bi bi-chevron-down order-icon', {
-    inverse: inverse,
+    inverse,
   });
 
   return (
@@ -30,16 +34,14 @@ function ChevronDownIcon({ inverse }: { inverse: boolean }) {
   );
 }
 
-export default function EmployeeTable({
-  employees,
-  toggleDateJoinedOrder,
-}: EmployeeTableProps) {
-  const [inverse, setInverse] = useState(false);
+export default function EmployeeTable({ employees }: EmployeeTableProps) {
+  const [dateJoinedOrder, setDateJoinedOrder] = useState<'asc' | 'desc'>(
+    ORDER.DESC
+  );
 
   const handleDateJoinedHeaderClick = useCallback(() => {
-    setInverse(!inverse);
-    toggleDateJoinedOrder();
-  }, [inverse, toggleDateJoinedOrder]);
+    setDateJoinedOrder(dateJoinedOrder === ORDER.ASC ? ORDER.DESC : ORDER.ASC);
+  }, [dateJoinedOrder]);
 
   return (
     <table className="table table-hover">
@@ -47,27 +49,30 @@ export default function EmployeeTable({
         <tr>
           <th scope="col">Full Name</th>
           <th
-            className="d-flex justify-content-end align-items-center"
+            className="d-flex justify-content-start align-items-center"
             scope="col"
             onClick={handleDateJoinedHeaderClick}
           >
-            Date Joined <ChevronDownIcon inverse={inverse} />
+            Date Joined{' '}
+            <ChevronDownIcon inverse={dateJoinedOrder === ORDER.ASC} />
           </th>
-          <th scope="col" style={{ textAlign: 'right' }}>
+          <th className="text-right" scope="col">
             Salary
           </th>
         </tr>
       </thead>
       <tbody>
-        {employees.map(({ employeeId, dateJoined, fullName, salary }) => {
-          return (
-            <tr key={employeeId}>
-              <th scope="row">{fullName}</th>
-              <td className="text-right">{formatDate(dateJoined)}</td>
-              <td className="text-right">{formatCurrency(salary)}</td>
-            </tr>
-          );
-        })}
+        {sortEmployees(employees, 'dateJoined', dateJoinedOrder).map(
+          ({ employeeId, dateJoined, fullName, salary }) => {
+            return (
+              <tr key={employeeId}>
+                <th scope="row">{fullName}</th>
+                <td>{formatDate(dateJoined)}</td>
+                <td className="text-right">{formatCurrency(salary)}</td>
+              </tr>
+            );
+          }
+        )}
       </tbody>
     </table>
   );

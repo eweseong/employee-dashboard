@@ -5,20 +5,11 @@ import {
   getHighestEarningEmployee,
   getMostRecentlyJoinedEmployee,
 } from 'helpers/employeeHelper';
-import { orderBy } from 'lodash';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import EmployeeService from 'services/employeeService';
-
-const ASC = 'asc';
-const DESC = 'desc';
 
 function App() {
   const [employees] = useState<Employee[]>(EmployeeService.getEmployees());
-  const [dateJoinedOrder, setDateJoinedOrder] = useState<'asc' | 'desc'>(DESC);
-
-  const toggleDateJoinedOrder = useCallback(() => {
-    setDateJoinedOrder(dateJoinedOrder === ASC ? DESC : ASC);
-  }, [dateJoinedOrder]);
 
   return (
     <div className="employee-dashboard container">
@@ -39,10 +30,7 @@ function App() {
       </div>
       <div className="row">
         <div className="col-12">
-          <EmployeeTable
-            employees={orderBy(employees, ['dateJoined'], [dateJoinedOrder])}
-            toggleDateJoinedOrder={toggleDateJoinedOrder}
-          />
+          <EmployeeTable employees={employees} />
         </div>
       </div>
     </div>

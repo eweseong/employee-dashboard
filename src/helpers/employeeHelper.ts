@@ -1,8 +1,9 @@
+import { ORDER } from 'const';
 import { formatISO } from 'date-fns';
 import { last, orderBy } from 'lodash';
 
 export function getHighestEarningEmployee(employees: Employee[]) {
-  const employee = last(orderBy(employees, ['salary'], ['asc']));
+  const employee = last(sortEmployees(employees, 'salary'));
 
   if (employee) {
     const { fullName, salary } = employee;
@@ -13,7 +14,7 @@ export function getHighestEarningEmployee(employees: Employee[]) {
 }
 
 export function getMostRecentlyJoinedEmployee(employees: Employee[]) {
-  const employee = last(orderBy(employees, ['dateJoined'], ['asc']));
+  const employee = last(sortEmployees(employees, 'dateJoined'));
 
   if (employee) {
     const { fullName, dateJoined } = employee;
@@ -32,4 +33,12 @@ export function formatCurrency(value: number) {
 
 export function formatDate(date: Date) {
   return formatISO(date, { representation: 'date' });
+}
+
+export function sortEmployees(
+  employees: Employee[],
+  key: string,
+  order: 'asc' | 'desc' = ORDER.ASC
+) {
+  return orderBy(employees, [key], [order]);
 }
